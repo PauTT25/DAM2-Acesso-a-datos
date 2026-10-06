@@ -102,6 +102,80 @@ def cargar_con_csv():
     # 5. Devuelve la lista a quien llamó a la función
     return alumnos
 
+print("\n--- PASO 7: guardar en JSON ---")
+def guardar_json(alumnos):
+    # 1. Convierte la lista en un texto JSON
+    texto = json.dumps(alumnos)
+    # 2. Comprueba los tipos: antes list, después str
+    print("Tipo de alumnos:", type(alumnos))
+    print("Tipo de texto:  ", type(texto))
+    # 3. Guarda el texto en el fichero NOMBRE_JSON
+    fichero = open(NOMBRE_JSON, "w")
+    fichero.write(texto)
+    fichero.close()
+    print("Guardado en", NOMBRE_JSON)
+
+print("\n--- PASO 8: cargar el JSON ---")
+def cargar_json():
+    fichero = open(NOMBRE_JSON, "r")
+    # 1. readlines() da una LISTA de líneas; coge la primera
+    linea = fichero.readlines()[0]
+    fichero.close()
+    print("Tipo de lo leído:", type(linea))
+    # 2. Convierte el texto JSON otra vez en una lista de Python
+    alumnos = json.loads(linea)
+    print("Tipo tras json.loads:", type(alumnos))
+    return alumnos
+
+print("\n--- PASO 9: excepciones ---")
+def leer_fichero_seguro(nombre):
+    fichero = None
+    try:
+        # Aquí va lo que puede fallar
+        fichero = open(nombre, "r")
+        print("Contenido de", nombre + ":")
+        print(fichero.read())
+    except FileNotFoundError:
+        # El fichero no existe
+        print("Error: el fichero", nombre, "no existe.")
+    except PermissionError:
+        print("Error: no tienes permiso para leer", nombre)
+    except IOError:
+        print("Error: hubo un problema al leer", nombre)
+    finally:
+        # Esto se ejecuta SIEMPRE, haya error o no
+        if fichero is not None:
+            fichero.close()
+        print("Fin de la lectura de", nombre)
+
+print("\n--- PASO 10: binario ---")
+def guardar_total_binario(total):
+    # 1. Abre el fichero en modo escritura BINARIA
+    fichero = open(NOMBRE_BINARIO, "wb")
+    # 2. Convierte el número en bytes y escríbelo
+    fichero.write(bytes([total]))
+    fichero.close()
+    # 3. Ábrelo en modo lectura BINARIA y lee
+    fichero = open(NOMBRE_BINARIO, "rb")
+    datos = fichero.read()
+    fichero.close()
+    # 4. datos[0] es el primer byte, ya como número
+    print("Número guardado en binario:", datos[0])
+
+print("\n--- PASO 11: ficheros creados ---")
+def listar_ficheros():
+    # os.listdir(".") da la lista de lo que hay en la carpeta actual
+    for nombre in os.listdir("."):
+        # Solo mostramos nuestros ficheros
+        if nombre.startswith("notas") or nombre.endswith(".bin"):
+            print("-", nombre)
+
+
+
+
+
+
+
 
 
 
@@ -130,6 +204,29 @@ def main():
     print("\n--- PASO 6: leer con csv ---")
     alumnos = cargar_con_csv()
     print(alumnos)
+
+    print("\n--- PASO 7: guardar en JSON ---")
+    guardar_json(alumnos)
+
+    print("\n--- PASO 8: cargar el JSON ---")
+    recuperados = cargar_json()
+    for alumno in recuperados:
+        print(alumno["nombre"], "tiene un", alumno["nota"])
+
+    print("\n--- PASO 9: excepciones ---")
+    leer_fichero_seguro(NOMBRE_NOTAS)
+    leer_fichero_seguro("no_existe.txt")
+
+    print("\n--- PASO 10: binario ---")
+    guardar_total_binario(len(recuperados))
+
+    print("\n--- PASO 11: ficheros creados ---")
+    listar_ficheros()
+
+
+
+
+
 
 
 
