@@ -1,3 +1,7 @@
+#(source entorno/bin/activate )-Para activar el entorno virtual con (pip install mysql-connector-python) activado.#
+
+import mysql.connector
+
 libros = [
     {"titulo": "Don Quijote", "paginas": 863,
      "generos": ["novela", "aventuras", "humor"]},
@@ -7,7 +11,14 @@ libros = [
      "generos": ["novela"]}
 ]
 
-pip install mysql-connector-python
+muestra = libros[0]
+for clave in muestra.keys():
+    print(clave, type(muestra[clave]))
 
-import mysql.connector 
-mysql.connector.conect(host="localhost", user="root", password="", database="mascotas_db")
+conn = mysql.connector.connect(
+    host="localhost",
+    user="desfase",
+    password="desfase",
+    database="desfase"
+)
+cursor = conn.cursor()
